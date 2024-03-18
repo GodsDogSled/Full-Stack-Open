@@ -1,0 +1,44 @@
+{
+  "notes": [
+    {
+      "id": "1",
+      "content": "HTML is easy",
+      "important": false
+    },
+    {
+      "id": "2",
+      "content": "Browser can execute only JavaScr",
+      "important": false
+    },
+    {
+      "id": "3",
+      "content": "GET and POST are the most important methods of HTTP protocol",
+      "important": false
+    },
+    {
+      "id": "4",
+      "content": "a new notey",
+      "important": true
+    },
+    {
+      "id": "ba56",
+      "content": "tester",
+      "important": true
+    },
+    {
+      "id": "0eb7",
+      "content": "tester2",
+      "important": false
+    },
+    {
+      "id": "984d",
+      "content": "a new note5",
+      "important": false
+    },
+    {
+      "id": "549e",
+      "content": "asgdfg",
+      "important": true
+    }
+  ]
+}
