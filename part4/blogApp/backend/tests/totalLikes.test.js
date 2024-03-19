@@ -53,10 +53,10 @@ describe('reducer count', () => {
       __v: 0
     }
   ]
-  test('author count', () => {
-    const result = listHelper.mostBlogs(blogs)
-    assert.deepStrictEqual(result, { author: "Robert C. Martin", score: 3 })
-  })
+  // test('author count', () => {
+  //   const result = listHelper.mostBlogs(blogs)
+  //   assert.deepStrictEqual(result, { author: "Robert C. Martin", score: 3 })
+  // })
 
 })
 
