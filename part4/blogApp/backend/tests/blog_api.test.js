@@ -115,21 +115,10 @@ test("blog post updated", async () => {
     likes: newInfo.likes + 300
   }
 
-
-
-
   await api.put(`/api/blogs/${initialBlogs[0].id}`).send(newBlog)
-
   const endBlog = await helper.blogsInDb()
-
-
   assert.strictEqual(newBlog.likes, endBlog[0].likes)
 })
-
-
-
-
-
 
 after(async () => {
   await mongoose.connection.close()
