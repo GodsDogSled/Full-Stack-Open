@@ -28,6 +28,10 @@ const remove = async (blogId) => {
   return response
 }
 
+const update = async (id, newBlog) => {
+  const request = await axios.put(`${baseUrl}/${id}`, newBlog)
+  return request.data
+}
 
 
-export default { getAll, setToken, create, remove }
+export default { getAll, setToken, create, remove, update }
