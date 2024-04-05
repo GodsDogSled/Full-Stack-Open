@@ -12,9 +12,7 @@ const App = () => {
   const [blogPostMessage, setBlogPostMessage] = useState(null);
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
 
@@ -71,19 +69,19 @@ const App = () => {
     }
   }
 
-  const handleBlogPost = async (event) => {
-    event.preventDefault()
+  const handleBlogPost = async (blogObject) => {
+
     blogFormRef.current.toggleVisibility()
-    const blog = {
-      title: title,
-      author: author,
-      url: url,
-    }
+
     try {
-      const newBlog = await blogService.create(blog)
+      const newBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(newBlog))
-      setBlogPostMessage(`${title} by ${author} added`)
+      setBlogPostMessage(`${blogObject.title} by ${blogObject.author} added`)
+      setTimeout(() => {
+        setBlogPostMessage(null)
+      }, 7000)
     } catch (exception) {
+      console.log(exception)
       setErrorMessage('Blog Post Error')
       setTimeout(() => {
         setErrorMessage(null)
@@ -92,12 +90,12 @@ const App = () => {
   }
 
   const deleteBlog = async (blog) => {
-
     try {
-
       const newBlog = await blogService.remove(blog.id)
-
       setBlogPostMessage(`${blog.title} by ${blog.author} DELETED`)
+      setTimeout(() => {
+        setBlogPostMessage(null)
+      }, 5000)
     } catch (exception) {
       setErrorMessage('Blog Delete Error')
       setTimeout(() => {
@@ -126,8 +124,7 @@ const App = () => {
         <div className="logged-in">
           <Togglable buttonLabel={'New Blog Post'} ref={blogFormRef}>
             <NewBlogForm
-              updateState={updateFormState}
-              handleBlogPost={handleBlogPost}
+              createBlogPost={handleBlogPost}
             />
           </Togglable>
           <h3>{user.username} logged in</h3><br></br>
