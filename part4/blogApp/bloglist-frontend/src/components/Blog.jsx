@@ -13,11 +13,13 @@ const Blog = ({ blog, deleteBlog, likeBlog }) => {
     likeBlog(blog, likeIncramnet)
   }
 
+
+
   return (
     <div style={{ border: "1px solid black", margin: "1em", width: "20%" }}>
-      <span style={{ fontWeight: "bold" }} >{blog.title}</span>
+      <span className="blog-title" style={{ fontWeight: "bold" }} >{blog.title}</span>
+      <p className="blog-author">-{blog.author}</p>
       <Togglable buttonLabel={"View Details"} closeLabel={"Close"}>
-        <p>-{blog.author}</p>
         <div style={{ display: "flex", marginBottom: "1em" }}>
           <p style={{ margin: "0" }}>Likes: {likes}</p><button onClick={() => handleLike(likes + 1)}>Like</button>
         </div>
