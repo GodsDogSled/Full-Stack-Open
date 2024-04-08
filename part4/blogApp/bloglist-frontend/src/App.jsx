@@ -42,7 +42,7 @@ const App = () => {
         break;
       case "Title":
         setTitle(field.value)
-        console.log(title)
+
         break;
       case "Author":
         setAuthor(field.value)
@@ -60,6 +60,7 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
+      blogService.setToken(user.token)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
     } catch (exception) {
       setErrorMessage('Wrong Credentials')
@@ -81,7 +82,7 @@ const App = () => {
         setBlogPostMessage(null)
       }, 7000)
     } catch (exception) {
-      console.log(exception)
+
       setErrorMessage('Blog Post Error')
       setTimeout(() => {
         setErrorMessage(null)
@@ -90,6 +91,7 @@ const App = () => {
   }
 
   const deleteBlog = async (blog) => {
+
     try {
       const newBlog = await blogService.remove(blog.id)
       setBlogPostMessage(`${blog.title} by ${blog.author} DELETED`)
@@ -106,9 +108,9 @@ const App = () => {
   }
 
   const handleLike = async (blog, likes) => {
-    console.log(blog)
+
     const likedBlog = { ...blog, likes: likes }
-    console.log(likedBlog)
+
     const updated = await blogService.update(blog.id, likedBlog)
   }
 
@@ -131,7 +133,9 @@ const App = () => {
         :
         <div className="logged-in">
           <h3>{user.username} logged in</h3>
+
           <button onClick={() => logout()}>Log Out</button>
+          <button onClick={() => console.log(user)}>View ID</button>
           <Togglable buttonLabel={'New Blog Post'} ref={blogFormRef}>
             <NewBlogForm
               createBlogPost={handleBlogPost}
@@ -140,7 +144,7 @@ const App = () => {
 
           <h2>blogs</h2>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} likeBlog={handleLike} />
+            <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} likeBlog={handleLike} loggedUser={user.id} />
           )}
         </div>
       }

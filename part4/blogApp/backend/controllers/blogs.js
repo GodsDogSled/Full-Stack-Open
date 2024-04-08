@@ -53,7 +53,22 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id)
+  const body = request.body
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  console.log("decoded token:", decodedToken)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
+
+  if (decodedToken.id === blog.user.id) {
+    console.log("logged user matchs blog poster")
+    await Blog.findByIdAndDelete(request.params.id)
+  } else {
+
+    return response.status(401).json({ error: 'logged user did not post this blog' })
+  }
+
   response.status(204).end()
 })
 

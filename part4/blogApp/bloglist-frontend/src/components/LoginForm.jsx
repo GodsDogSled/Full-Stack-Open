@@ -2,9 +2,9 @@ import PropTypes from 'prop-types'
 const LoginForm = ({ handleLogin, username, password, updateState }) => {
 
   LoginForm.propTypes = {
-    handlezLogin: PropTypes.func.isRequired,
+    handleLogin: PropTypes.func.isRequired,
     updateState: PropTypes.func.isRequired,
-    handlePasswordChange: PropTypes.func.isRequired,
+
     username: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired
   }
@@ -17,6 +17,7 @@ const LoginForm = ({ handleLogin, username, password, updateState }) => {
           type="text"
           value={username}
           name="Username"
+          data-testid='username'
           onChange={({ target }) => updateState(target)}
         />
       </div>
@@ -26,10 +27,11 @@ const LoginForm = ({ handleLogin, username, password, updateState }) => {
           type="password"
           value={password}
           name="Password"
+          data-testid='password'
           onChange={({ target }) => updateState(target)}
         />
       </div>
-      <button type="submit">login</button>
+      <button name="login" type="submit">login</button>
     </form>
   )
 }
