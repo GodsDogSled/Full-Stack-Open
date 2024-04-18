@@ -113,7 +113,6 @@ const App = () => {
 
     const updated = await blogService.update(blog.id, likedBlog)
     const sortedOrder = blogs.sort((a, b) => b.likes - a.likes)
-    // const unchangedBlogs = (blogs.filter(curBlog => curBlog.id !== blog.id))
     const updatedBlogs = [...blogs.filter(curBlog => curBlog.id !== blog.id), likedBlog]
     setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes))
   }
@@ -132,7 +131,6 @@ const App = () => {
         ?
         <Togglable buttonLabel={'Login'}>
           <LoginForm username={username} password={password} handleLogin={handleLogin} updateState={updateFormState} handleBlogPost={handleBlogPost} />
-
         </Togglable>
         :
         <div className="logged-in">

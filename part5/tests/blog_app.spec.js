@@ -53,6 +53,11 @@ describe('Blog App', () => {
       await page.getByRole('button', { name: "Like" }).click()
       await expect(page.getByText('Likes: 1')).toBeVisible()
     })
+
+    test('blogs with most likes is at the top', async ({ page }) => {
+      await createBlog(page, "Bing Rilling", "Rizz Billington", "http//www.zombo.com")
+      await createBlog(page, "Most Liked", "Bizz Billington", "http//www.zombo.com")
+    })
   })
 
 
