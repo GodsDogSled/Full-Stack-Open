@@ -34,6 +34,8 @@ const anecdoteReducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : updatedVote
       )
     }
+    case 'NEW_ANECDOTE':
+      return [...state, action.payload]
   }
   return state
 }
@@ -42,6 +44,17 @@ export const castVote = (id) => {
   return {
     type: "ADD VOTE",
     payload: { id }
+  }
+}
+
+export const newAnecdote = (content) => {
+  return {
+    type: "NEW_ANECDOTE",
+    payload: {
+      content,
+      votes: 0,
+      id: getId()
+    }
   }
 }
 
