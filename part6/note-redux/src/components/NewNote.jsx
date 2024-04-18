@@ -17,7 +17,6 @@ const NewNote = () => {
       <input name="note" />
       <button type="submit">add</button>
     </form>
-
   )
 }
 

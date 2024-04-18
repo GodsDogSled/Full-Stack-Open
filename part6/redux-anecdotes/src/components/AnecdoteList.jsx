@@ -3,7 +3,17 @@ import { castVote } from "../reducers/anecdoteReducer"
 
 export default function AnecdoteList() {
 
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(({ filter, anecdotes }) => {
+    if (filter === "") {
+      return anecdotes
+    }
+    return anecdotes.filter((obj) =>
+      obj.content.toLowerCase().includes(filter)
+    )
+
+
+
+  })
   const dispatch = useDispatch()
 
 
