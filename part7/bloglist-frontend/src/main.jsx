@@ -6,12 +6,14 @@ import './index.css'
 import notificationReducer from './reducers/notificationReducer'
 import blogPostReducer from './reducers/blogPostReducer'
 import userReducer from './reducers/userReducer'
+import usersListReducer from './reducers/usersListReducer'
 
 const store = configureStore({
   reducer: {
     notification: notificationReducer,
     blogs: blogPostReducer,
-    user: userReducer
+    user: userReducer,
+    users: usersListReducer
   }
 })
 

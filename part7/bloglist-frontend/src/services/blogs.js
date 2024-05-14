@@ -1,5 +1,6 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
+const usersUrl = '/api/users'
 let token = null;
 const getAll = () => {
   const request = axios.get(baseUrl)
@@ -9,6 +10,12 @@ const getAll = () => {
 const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
+
+const getUsers = async () => {
+  const users = await axios.get(usersUrl)
+  return users.data
+}
+
 
 const create = async (newBlog) => {
   const config = {
@@ -34,4 +41,4 @@ const update = async (id, newBlog) => {
 }
 
 
-export default { getAll, setToken, create, remove, update }
+export default { getAll, setToken, create, remove, update, getUsers }

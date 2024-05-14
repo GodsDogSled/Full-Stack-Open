@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link, useNavigate
+} from 'react-router-dom'
 import Blog from './components/Blog'
+import Menu from './components/Menu'
+import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -7,6 +14,7 @@ import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
 import { successNotification, errorNotification, resetNotification } from './reducers/notificationReducer'
 import { initializeBlogPosts, likePost } from './reducers/blogPostReducer'
+import { initializeUsers } from './reducers/usersListReducer'
 import { setUser } from './reducers/userReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBlogPost, deletePost } from './reducers/blogPostReducer'
@@ -21,12 +29,14 @@ const App = () => {
   const notifications = useSelector(state => state.notification);
   const blogs = useSelector(state => state.blogs);
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
   const dispatch = useDispatch()
 
   useEffect(() => {
     // blogService.getAll().then(blogs => {
     //   setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     // })
+    dispatch(initializeUsers())
     dispatch(initializeBlogPosts())
   }, [])
 
@@ -119,34 +129,46 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Personal Blogs</h1>
-      {notifications.error ? <p className='error'>{notifications.error}</p> : ""}
-      {notifications.success ? <p className='success-message'>{notifications.success}</p> : ""}
-      {user === null
-        ?
-        <Togglable buttonLabel={'Login'}>
-          <LoginForm username={username} password={password} handleLogin={handleLogin} updateState={updateFormState} handleBlogPost={handleBlogPost} />
-        </Togglable>
-        :
-        <div className="logged-in">
-          <h3>{user.username} logged in</h3>
+    <Router>
+      <div>
+        <h1>Personal Blogs</h1>
+        <Menu />
+        <Routes>
+          <Route path="/" element={user === null
+            ?
+            <Togglable buttonLabel={'Login'}>
+              <LoginForm username={username} password={password} handleLogin={handleLogin} updateState={updateFormState} handleBlogPost={handleBlogPost} />
+            </Togglable>
+            :
+            <div className="logged-in">
+              <h3>{user.username} logged in</h3>
+              <button onClick={() => logout()}>Log Out</button>
+              <button onClick={() => console.log(user)}>View ID</button>
+              <Togglable buttonLabel={'New Blog Post'} ref={blogFormRef}>
+                <NewBlogForm
+                  createBlogPost={handleBlogPost}
+                />
+              </Togglable>
 
-          <button onClick={() => logout()}>Log Out</button>
-          <button onClick={() => console.log(user)}>View ID</button>
-          <Togglable buttonLabel={'New Blog Post'} ref={blogFormRef}>
-            <NewBlogForm
-              createBlogPost={handleBlogPost}
-            />
-          </Togglable>
+              <h2>blogs</h2>
+              {blogs.map(blog =>
+                <li key={blog.id}>
+                  <Link to={`/blog/${blog.id}`}>
+                    {blog.title}
+                  </Link>
+                </li>
+              )}
+            </div>
+          } />
+          <Route path="/users" element={<Users data={users} />} />
+          <Route path="/users/:id" element={<User userData={users} />} />
+          <Route path="/blog/:id" element={<Blog blogs={blogs} deleteBlog={deleteBlog} likeBlog={handleLike} />} />
+        </Routes>
+        {notifications.error ? <p className='error'>{notifications.error}</p> : ""}
+        {notifications.success ? <p className='success-message'>{notifications.success}</p> : ""}
 
-          <h2>blogs</h2>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} deleteBlog={deleteBlog} likeBlog={handleLike} loggedUser={user.id} />
-          )}
-        </div>
-      }
-    </div>
+      </div>
+    </Router>
   )
 }
 
