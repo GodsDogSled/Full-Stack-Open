@@ -99,16 +99,16 @@ let books = [
 */
 
 const typeDefs = `
-type Author {
-  name: String
-  born:Int
-  bookCount: Int
-}
+  type Author {
+    name: String
+    born:Int
+    bookCount: Int
+  }
   
   type Book {
     title: String!
-    author: Author!
-    published: Int! 
+    author: String!
+    published: String! 
     genres: [String!]!
   }
 
@@ -116,19 +116,19 @@ type Author {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre:String): [Book!]!
-    allAuthors: [Author!]
+    allAuthors: [Author]
   }
   type Mutation {
     addBook(
       title: String!
-      published: Int!
+      published: String!
       author: String!
       genres:[String!]!
     ): Book
     editAuthor(
       name: String
       setBornTo:Int
-    ):Author
+    ): Author
   }
 `
 
@@ -136,7 +136,6 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: (root, args) => {
-
       books.forEach(book => authors.includes(book.author) ? null : authors.push(book.author))
       return authors.length
     },
@@ -176,10 +175,23 @@ const resolvers = {
       return authorsBooks.length
     }
   },
+  // Book: {
+  //   author: ({ name, born, bookCount }) => {
+  //     return {
+  //       name,
+  //       bookCount,
+  //       born
+  //     }
+  //   }
+  // },
   Mutation: {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
       books = books.concat(book)
+      if (authors.find(author => author.name.toLocaleLowerCase() === book.author.toLocaleLowerCase())) {
+        return book
+      }
+      authors = authors.concat({ name: book.author })
       return book
     },
     editAuthor: (root, args) => {
@@ -189,7 +201,7 @@ const resolvers = {
         return null
       }
       const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(a => a.name == args.name ? updatedAuthor : a)
+      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
       console.log(updatedAuthor)
       return updatedAuthor
     }
