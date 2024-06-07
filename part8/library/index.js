@@ -154,26 +154,27 @@ const typeDefs = `
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
-    authorCount: (root, args) => {
+    authorCount: async (root, args) => {
       books.forEach(book => authors.includes(book.author) ? null : authors.push(book.author))
-      return authors.length
+      return Author.collection.countDocuments()
     },
-    allBooks: (root, args) => {
+    allBooks: async (root, args) => {
+
+      let books = await Book.find({}).populate('author', { name: 1 })
+
       if (!args.author && !args.genre) {
         return books
       }
       if (!args.genre) {
-        return books.filter(book => book.author === args.author)
+        console.log("inside")
+        console.log(books.filter(book => book.title === args.author))
+        return books.filter(book => book.author.name === args.author)
       }
-      if (!args.author) {
-        return books.filter(book => book.genres.includes(args.genre))
-      }
-      return books.filter(book => book.author === args.author && book.genres.includes(args.genre))
+
+      return books.filter(book => book.genres.includes(args.genre))
     },
-    allAuthors: (root) => {
-      // const authorsData = []
-      // books.forEach(book => authorsData.includes(book.author) ? null : authorsData.push(book.author))
-      return authors
+    allAuthors: async (root) => {
+      return await Author.find()
     }
   },
   Author: {
@@ -209,7 +210,7 @@ const resolvers = {
 
       // const author = new Author({ name: args.author })
       let author = await Author.findOne({ name: args.author })
-      console.log(author)
+
       if (!author) {
         author = await new Author({ name: args.author }).save()
       }
@@ -220,6 +221,8 @@ const resolvers = {
         author,
         genres: args.genres
       })
+
+
       // books = books.concat(book)
       // if (authors.find(author => author.name.toLocaleLowerCase() === book.author.toLocaleLowerCase())) {
       //   return book
