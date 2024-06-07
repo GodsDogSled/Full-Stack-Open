@@ -8,6 +8,7 @@ import { ALL_PERSONS } from './queries/queries'
 
 const App = () => {
   const result = useQuery(ALL_PERSONS)
+  console.log(result)
   const [errorMessage, setErrorMessage] = useState(null)
 
   if (result.loading) {

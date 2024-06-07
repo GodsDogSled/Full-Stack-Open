@@ -1,6 +1,27 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require('graphql')
 const { v1: uuid } = require('uuid')
+const jwt = require('jsonwebtoken')
+
+const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
+require('dotenv').config()
+
+const Book = require('./models/book')
+const Author = require('./models/author')
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 let authors = [
   {
@@ -106,10 +127,10 @@ const typeDefs = `
   }
   
   type Book {
-    title: String!
-    author: String!
-    published: String! 
-    genres: [String!]!
+    title: String
+    author: Author!
+    published: String
+    genres: [String!]
   }
 
   type Query {
@@ -118,23 +139,21 @@ const typeDefs = `
     allBooks(author: String, genre:String): [Book!]!
     allAuthors: [Author]
   }
+
   type Mutation {
     addBook(
       title: String!
-      published: String!
       author: String!
-      genres:[String!]!
-    ): Book
-    editAuthor(
-      name: String
-      setBornTo:Int
-    ): Author
+      published: Int!
+      genres: [String!]!
+    ): Book!
+    editAuthor(name: String!, setBornTo: Int!): Author
   }
 `
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
+    bookCount: () => Book.collection.countDocuments(),
     authorCount: (root, args) => {
       books.forEach(book => authors.includes(book.author) ? null : authors.push(book.author))
       return authors.length
@@ -185,13 +204,43 @@ const resolvers = {
   //   }
   // },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      books = books.concat(book)
-      if (authors.find(author => author.name.toLocaleLowerCase() === book.author.toLocaleLowerCase())) {
-        return book
+    addBook: async (root, args) => {
+
+
+      // const author = new Author({ name: args.author })
+      let author = await Author.findOne({ name: args.author })
+      console.log(author)
+      if (!author) {
+        author = await new Author({ name: args.author }).save()
       }
-      authors = authors.concat({ name: book.author })
+
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author,
+        genres: args.genres
+      })
+      // books = books.concat(book)
+      // if (authors.find(author => author.name.toLocaleLowerCase() === book.author.toLocaleLowerCase())) {
+      //   return book
+      // }
+      // authors = authors.concat({ name: book.author })
+      // return book
+      try {
+        console.log("inisde try", book)
+        // await author.save()
+        await book.save()
+      } catch (error) {
+        console.log("inside catch", book)
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
+      }
+
       return book
     },
     editAuthor: (root, args) => {
