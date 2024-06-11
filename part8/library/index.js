@@ -142,6 +142,8 @@ const typeDefs = `
   
   type Token {
     value: String!
+    username: String
+    favoriteGenre: String
   }
 
   type Query {
@@ -326,7 +328,7 @@ const resolvers = {
         id: user._id,
       }
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET), username: user.username, favoriteGenre: user.favoriteGenre }
     },
     logout: async (root, args, context) => {
       let oldUser = context.currentUser
