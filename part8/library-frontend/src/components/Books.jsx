@@ -1,19 +1,27 @@
-import { ALL_BOOKS } from '../queries/queries'
-import { useQuery } from '@apollo/client'
+import { ALL_BOOKS, BOOK_GENRE } from '../queries/queries'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { useState } from 'react'
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS)
+
+  const [queryGenre, setQueryGenre] = useState()
+  const { loading, error, data, refetch } = useQuery(ALL_BOOKS, {
+    variables: { genre: null }
+  })
+  const [getLazyGenres, lazyGenres] = useLazyQuery(BOOK_GENRE);
+
+
   const [bookGenres, setBookGenres] = useState([])
   const [genreToShow, setGenreToShow] = useState("show all books")
+
   if (!props.show) {
     return null
   }
 
-  if (result.loading) {
+  if (loading) {
     return <div>loading...</div>
   }
   // console.log(result.data.allBooks)
-  const books = result.data.allBooks
+  const books = data.allBooks
 
   if (books.length > 0) {
     books.forEach(book => {
@@ -25,6 +33,17 @@ const Books = (props) => {
       })
     })
   }
+
+  const handleGenreChange = async (x) => {
+    // await getLazyGenres({ variables: { genre: "sci-fi" } })
+    // const newResult = { ...lazyGenres.data.allBooks }
+    // console.log(newResult)
+    console.log(x)
+    refetch()
+    setGenreToShow(x)
+    console.log(data.allBooks)
+  }
+
 
   return (
     <div>
@@ -47,7 +66,7 @@ const Books = (props) => {
               )
             })
             : null}
-          {books.map((a) => {
+          {/* {books.map((a) => {
             return (
               a.genres.includes(genreToShow)
                 ?
@@ -59,14 +78,14 @@ const Books = (props) => {
                 :
                 null
             )
-          })}
+          })} */}
         </tbody>
       </table>
       <h4>Filter by genre</h4>
-      <button onClick={() => setGenreToShow("show all books")}>Reset Filter</button>
+      <button onClick={() => refetch({ genre: null })}>Reset Filter</button>
       {bookGenres.map((genre, i) => {
         return (
-          <button onClick={() => setGenreToShow(genre)} key={i}>{genre}</button>
+          <button onClick={() => refetch({ genre: genre })} key={i}>{genre}</button>
         )
       })}
     </div>
