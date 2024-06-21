@@ -1,27 +1,38 @@
-import { ALL_BOOKS, BOOK_GENRE } from '../queries/queries'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { useState } from 'react'
+import { ALL_BOOKS, BOOK_ADDED } from '../queries/queries'
+import { useQuery, useLazyQuery, useSubscription } from '@apollo/client'
+import { useState, useEffect } from 'react'
 const Books = (props) => {
 
   const [queryGenre, setQueryGenre] = useState()
+  const [bookToAdd, setBookToAdd] = useState()
   const { loading, error, data, refetch } = useQuery(ALL_BOOKS, {
     variables: { genre: null }
   })
-  const [getLazyGenres, lazyGenres] = useLazyQuery(BOOK_GENRE);
-
 
   const [bookGenres, setBookGenres] = useState([])
   const [genreToShow, setGenreToShow] = useState("show all books")
+
+  useEffect(() => {
+    if (props.newBook) {
+      refetch({ genre: null })
+    }
+  }, [props.newBook]);
 
   if (!props.show) {
     return null
   }
 
+
+
   if (loading) {
     return <div>loading...</div>
   }
-  // console.log(result.data.allBooks)
+
   const books = data.allBooks
+
+
+
+
 
   if (books.length > 0) {
     books.forEach(book => {

@@ -35,6 +35,18 @@ export const BOOK_GENRE = gql`
   }
 `
 
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    published
+    genres
+    author {
+      name 
+      born
+    }
+  }
+`
+
 export const CREATE_BOOK = gql`
 mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
   addBook(
@@ -72,4 +84,13 @@ export const LOGIN = gql`
       favoriteGenre
     }
   }
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
 `

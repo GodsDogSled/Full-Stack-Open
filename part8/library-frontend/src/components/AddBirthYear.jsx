@@ -8,7 +8,10 @@ const AddBirthYear = (props) => {
   const [year, setYear] = useState('')
   const [selectedAuthor, setSelectedAuthor] = useState("Slect an Author")
 
-  const authorData = useQuery(ALL_AUTHORS)
+  const result = useQuery(ALL_AUTHORS)
+  useEffect(() => {
+    result.refetch();
+  }, []);
 
   const [editAuthor] = useMutation(UPDATE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
@@ -18,7 +21,7 @@ const AddBirthYear = (props) => {
     // }
   })
 
-  if (authorData.loading) {
+  if (result.loading) {
     return (
       <div>
         loading..
@@ -27,7 +30,7 @@ const AddBirthYear = (props) => {
   }
 
 
-  const authors = authorData.data.allAuthors
+  const authors = result.data.allAuthors
 
   const options = authors.map(author => {
     return {

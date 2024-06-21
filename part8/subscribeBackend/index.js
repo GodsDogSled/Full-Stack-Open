@@ -7,7 +7,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const cors = require('cors')
 const http = require('http')
-const { GraphQLError } = require('graphql')
+
 const { v1: uuid } = require('uuid')
 const jwt = require('jsonwebtoken')
 
