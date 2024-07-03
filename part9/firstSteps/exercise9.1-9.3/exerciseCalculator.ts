@@ -8,7 +8,7 @@ interface ExerciseResults {
   average: number;
 }
 
-const calculateExercises = (args: number[], targetNumber: number): ExerciseResults => {
+export const calculateExercises = (args: number[], targetNumber: number): ExerciseResults => {
   const goalTrainingDays = targetNumber
   const daysTrained = args.filter(arg => arg > 0 ? arg : null)
   const calcAverage = () => {
@@ -17,10 +17,11 @@ const calculateExercises = (args: number[], targetNumber: number): ExerciseResul
   }
   const isSuccess = (daysTrained.length > 5) ? true : false
   const calcRating = daysTrained.length / goalTrainingDays
-  const ratingDescription = () => {
+  const ratingDescription = (): string => {
     if (calcRating < .33) return "You did really bad";
     if (calcRating < .66) return "Not bad, but could be better"
-    if (calcRating < 1) return "You did a damn good job"
+    if (calcRating > 1) return "You did a damn good job"
+    return `calc error - ${calcRating}`
   }
   return {
     periodLength: args.length,

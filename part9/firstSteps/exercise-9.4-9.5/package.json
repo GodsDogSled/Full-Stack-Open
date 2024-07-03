@@ -1,16 +1,12 @@
 {
-  "name": "settingthingsup",
+  "name": "exercise-9.4-9.5",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ts-node": "ts-node",
-    "multiply": "ts-node multiplier.ts",
-    "calculate": "ts-node calculator.ts",
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev index.ts",
-    "lint": "eslint --ext .ts ."
+    "dev": "ts-node-dev index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +15,6 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@typescript-eslint/eslint-plugin": "^7.14.1",
-    "@typescript-eslint/parser": "^7.14.1",
-    "eslint": "^8.57.0",
     "ts-node-dev": "^2.0.0"
   }
 }
