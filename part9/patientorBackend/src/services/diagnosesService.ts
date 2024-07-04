@@ -1,6 +1,7 @@
 import data from '../../data/diagnoses'
 import patientData from '../../data/patients'
-import { Diagnoses, Patient, NonPrivatePatientInfo } from '../types'
+import { Diagnoses, Patient, NewPatient, NonPrivatePatientInfo } from '../types'
+import { v1 as uuid } from 'uuid'
 
 const allDiagnoses: Diagnoses[] = data
 const allPatients: Patient[] = patientData
@@ -23,8 +24,18 @@ const getNonPrivatePatientInfo = (): NonPrivatePatientInfo[] => {
   }))
 }
 
+const addPatient = (patient: NewPatient): Patient => {
+  const newPatient = {
+    id: uuid(),
+    ...patient
+  }
+  allPatients.push(newPatient)
+  return newPatient
+}
+
 export default {
   getDiagnoses,
   getPatients,
-  getNonPrivatePatientInfo
+  getNonPrivatePatientInfo,
+  addPatient
 }
