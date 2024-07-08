@@ -4,9 +4,10 @@ interface TotalExercise {
 
 
 
+
 const Total = (props: TotalExercise) => {
   return (
-    <p>Total number of Exercieses: {props.totalExercises}</p>
+    <h3>Total number of Exercieses: {props.totalExercises}</h3>
   )
 };
 
