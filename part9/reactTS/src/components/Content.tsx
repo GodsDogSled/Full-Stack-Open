@@ -1,3 +1,5 @@
+import Part from "./Part"
+
 interface Content {
   name: string,
   exerciseCount: number
