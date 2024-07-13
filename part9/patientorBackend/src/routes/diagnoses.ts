@@ -2,6 +2,7 @@ import express from "express";
 import diagnosesService from "../services/diagnosesService";
 import toNewPatient from '../utils'
 
+
 const diagnosesRouter = express.Router()
 
 diagnosesRouter.get('/diagnoses', (_req, res) => {
@@ -10,6 +11,18 @@ diagnosesRouter.get('/diagnoses', (_req, res) => {
 diagnosesRouter.get('/patients', (_req, res) => {
   res.send(diagnosesService.getNonPrivatePatientInfo())
 });
+
+diagnosesRouter.get('/patients/:id', (_req, res) => {
+  try {
+    const patient = diagnosesService.findById(String(_req.params.id));
+    res.send(patient)
+  } catch (error: unknown) {
+    let errorMessage = "getting patient by Id error."
+    if (error instanceof Error) {
+      errorMessage += "Error:" + error.message
+    }
+  }
+})
 
 diagnosesRouter.post('/patients', (_req, res) => {
   try {

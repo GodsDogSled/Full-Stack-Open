@@ -11,17 +11,20 @@ export const toNewPatient = (object: unknown): NewPatient => {
       dateOfBirth: parseDate(object.dateOfBirth),
       gender: parseGender(object.gender),
       occupation: parseString(object.occupation),
-      ssn: parseString(object.ssn)
+      ssn: parseString(object.ssn),
+      entries: []
     }
     return newPatient
   }
 
-  throw new Error('Incorrect data: some fields are missing')
+  throw new Error(`Incorrect data: some fields are missing: ${object}`)
 }
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
+
+
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -42,7 +45,6 @@ const parseString = (name: unknown) => {
   if (!name || !isString(name)) {
     throw new Error('Incorrect or missing name: ' + name)
   }
-
   return name
 }
 
@@ -52,6 +54,24 @@ const parseGender = (gender: unknown): Gender => {
   }
   return gender
 }
+
+// const parseEntry = (entry: unknown): Entry[] => {
+//   if (!isArray(entry) || !isEntry(entry)) {
+//     throw new Error('Incorrect or missing entry' + entry)
+//   }
+//   return entry
+// }
+
+// const isEntry = (entry: unknown) => {
+//   if (entry) {
+//     return true
+//   }
+//   return true
+// }
+
+// const isArray = (entry: unknown) => {
+//   return Array.isArray(entry)
+// }
 
 
 

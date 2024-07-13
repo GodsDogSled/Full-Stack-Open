@@ -15,12 +15,13 @@ const getPatients = (): Patient[] => {
 }
 
 const getNonPrivatePatientInfo = (): NonPrivatePatientInfo[] => {
-  return allPatients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+  return allPatients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
     id,
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    entries
   }))
 }
 
@@ -33,9 +34,19 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient
 }
 
+const findById = (id: string): Patient | Error => {
+  const patient = allPatients.find(patient => patient.id === id)
+  if (patient) {
+    return patient
+  } else {
+    return new TypeError("Could not find a patient with that Id")
+  }
+}
+
 export default {
   getDiagnoses,
   getPatients,
   getNonPrivatePatientInfo,
-  addPatient
+  addPatient,
+  findById
 }
