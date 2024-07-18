@@ -37,4 +37,18 @@ diagnosesRouter.post('/patients', (_req, res) => {
   }
 })
 
+diagnosesRouter.post('/patients/:id/entries', (_req, res) => {
+  try {
+    const newEntry = _req.body;
+    const addedEntry = diagnosesService.addPatientEntry(String(_req.params.id), newEntry)
+
+    res.send(addedEntry);
+  } catch (error: unknown) {
+    let errorMessage = "something went wrong"
+    if (error instanceof Error) {
+      errorMessage += "Error" + error.message
+    }
+  }
+})
+
 export default diagnosesRouter

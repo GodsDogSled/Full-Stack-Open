@@ -1,10 +1,10 @@
 import data from '../../data/diagnoses'
 import patientData from '../../data/patients'
-import { Diagnoses, Patient, NewPatient, NonPrivatePatientInfo } from '../types'
+import { Diagnoses, Patient, NewPatient, NonPrivatePatientInfo, EntryWithoutId } from '../types'
 import { v1 as uuid } from 'uuid'
 
 const allDiagnoses: Diagnoses[] = data
-const allPatients: Patient[] = patientData
+let allPatients: Patient[] = patientData
 
 const getDiagnoses = (): Diagnoses[] => {
   return allDiagnoses
@@ -34,6 +34,36 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient
 }
 
+const addPatientEntry = (id: string, newEntry: EntryWithoutId) => {
+  const foundPatient = allPatients.find(patient => patient.id === id)
+  const entryWithId = {
+    id: uuid(),
+    ...newEntry
+  }
+
+  if (foundPatient) {
+    if (!foundPatient.entries) {
+      foundPatient.entries = [];
+    }
+    foundPatient.entries.push(entryWithId);
+
+    allPatients = allPatients.map(patient => {
+      if (patient.id === id) {
+        return {
+          ...patient,
+          entries: foundPatient.entries // Use the updated entries array
+        };
+      }
+      return patient;
+    });
+
+    return entryWithId; // Return the new entry
+  }
+  return foundPatient
+}
+
+
+
 const findById = (id: string): Patient | Error => {
   const patient = allPatients.find(patient => patient.id === id)
   if (patient) {
@@ -48,5 +78,6 @@ export default {
   getPatients,
   getNonPrivatePatientInfo,
   addPatient,
-  findById
+  findById,
+  addPatientEntry
 }
